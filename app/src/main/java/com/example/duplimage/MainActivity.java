@@ -67,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
     private List<Image> images = new ArrayList<>();
     String[] projection = {MediaStore.Images.Media._ID, MediaStore.Images.Media.DATA};
 
+    //String file to limit choices to jpg and jpeg files only
+    String[] mimeTypes = {"image/jpeg", "image/jpg"};
 
     //initialize request code for gallery picking
     public static final int PICK_IMAGE = 1;
@@ -136,7 +138,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v){
                 Intent pickIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                pickIntent.setType("image/*");
+                pickIntent.setType("image/jpeg");
+                pickIntent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
                 startActivityForResult(pickIntent, PICK_IMAGE);
             }
         });
@@ -145,7 +148,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v){
                 Intent pickIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                pickIntent.setType("image/*");
+                pickIntent.setType("image/jpeg");
+                pickIntent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
                 startActivityForResult(pickIntent, PICK_IMAGE2);
             }
         });
