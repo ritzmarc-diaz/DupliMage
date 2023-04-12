@@ -79,6 +79,9 @@ public class MainActivity extends AppCompatActivity {
 
     //initialize directory path
     DocumentFile pickedDir;
+
+    //initialize integer to count the files in a directory
+    int count = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,10 +134,8 @@ public class MainActivity extends AppCompatActivity {
         btn_choose_folder.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                Intent pickIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                pickIntent.setType("image/jpeg");
-                pickIntent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
-                startActivityForResult(pickIntent, PICK_IMAGE2);
+                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+                startActivityForResult(intent, CHOOSE_FOLDER);
             }
         });
 
@@ -231,20 +232,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //get File Path of Selected Image
-    private String getRealPathFromURI(Uri contentURI) {
-
-        String thePath = "no-path-found";
-        String[] filePathColumn = {MediaStore.Images.Media.DISPLAY_NAME};
-        Cursor cursor = getContentResolver().query(contentURI, filePathColumn, null, null, null);
-        if(cursor.moveToFirst()){
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            thePath = cursor.getString(columnIndex);
-        }
-        cursor.close();
-        return  thePath;
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
         super.onActivityResult(requestCode, resultCode, data);
@@ -279,6 +266,14 @@ public class MainActivity extends AppCompatActivity {
             if (requestCode==CHOOSE_FOLDER){
                 Uri treeUri = data.getData();
                 pickedDir = DocumentFile.fromTreeUri(this, treeUri);
+
+                for (DocumentFile file : pickedDir.listFiles()) {
+                    String type = this.getContentResolver().getType(file.getUri());
+                    if (type != null && type.startsWith("image/jpeg")) {
+                        count++;
+                    }
+                }
+                System.out.println(count);
             }
 
         }
