@@ -3,6 +3,7 @@ package com.example.duplimage;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.documentfile.provider.DocumentFile;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,6 +34,7 @@ import org.opencv.features2d.BFMatcher;
 import org.opencv.features2d.DescriptorMatcher;
 import org.opencv.features2d.ORB;
 import org.opencv.imgcodecs.Imgcodecs;
+import org.w3c.dom.Document;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -59,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
     //initialize request code for gallery picking
     public static final int PICK_IMAGE = 1;
     public static final int PICK_IMAGE2 = 2;
+    public static final int CHOOSE_FOLDER = 3;
 
     //initialize recyclerview module
     RecyclerView recyclerView;
@@ -73,6 +76,9 @@ public class MainActivity extends AppCompatActivity {
     //initialize file path for images
     String imagefile = "/sdcard/DCIM/heh.jpg";
     String imagefile2 = "/sdcard/DCIM/heh mcdo.jpg";
+
+    //initialize directory path
+    DocumentFile pickedDir;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -270,6 +276,11 @@ public class MainActivity extends AppCompatActivity {
                 imagefile2 = cursor.getString(column_index);
                 cursor.close();
             }
+            if (requestCode==CHOOSE_FOLDER){
+                Uri treeUri = data.getData();
+                pickedDir = DocumentFile.fromTreeUri(this, treeUri);
+            }
+
         }
     }
 
