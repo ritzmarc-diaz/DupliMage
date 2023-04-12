@@ -3,19 +3,13 @@ package com.example.duplimage;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.MediaScannerConnection;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -39,13 +33,9 @@ import org.opencv.features2d.DescriptorMatcher;
 import org.opencv.features2d.ORB;
 import org.opencv.imgcodecs.Imgcodecs;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.example.duplimage.Image;
 
 public class MainActivity extends AppCompatActivity {
     //Loads OpenCV Integration
@@ -65,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
     //Displays images and their duplicates
     private RecyclerView recyclerView;
     private List<Image> images = new ArrayList<>();
-    String[] projection = {MediaStore.Images.Media._ID, MediaStore.Images.Media.DATA};
 
     //String file to limit choices to jpg and jpeg files only
     String[] mimeTypes = {"image/jpeg", "image/jpg"};
@@ -105,33 +94,16 @@ public class MainActivity extends AppCompatActivity {
         }
         //Initializes textview and imageview
         imgGallery = findViewById(R.id.imageView);
-        imgGallery2 = findViewById(R.id.imageView2);
-        MatchResult = findViewById(R.id.matchResult);
+//        imgGallery2 = findViewById(R.id.imageView2);
+//        MatchResult = findViewById(R.id.matchResult);
 //        recyclerView = findViewById(R.id.imageView);
 //        recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
 
         //Initialize choose_image buttons
         Button btn_choose_image = findViewById(R.id.btn_choose_image);
-        Button btn_choose_image2 = findViewById(R.id.btn_choose_image2);
+        Button btn_choose_folder = findViewById(R.id.btn_choose_folder);
         Button btn_start_matching = findViewById(R.id.btn_match_images);
         Button btn_delete_image = findViewById(R.id.btn_delete_image);
-
-//        //Get User's Photo
-//        Cursor cursor = getContentResolver().query(
-//                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-//                projection,
-//                null,
-//                null,
-//                MediaStore.Images.Media.DATE_ADDED + " DESC");
-//
-//        if (cursor != null) {
-//            while (cursor.moveToNext()) {
-//                @SuppressLint("Range") String path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
-//                Bitmap thumbnail = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(path), 200, 200);
-//                images.add(new Image(path, thumbnail));
-//            }
-//            cursor.close();
-//        }
 
         //Button Click Listener
         btn_choose_image.setOnClickListener(new View.OnClickListener(){
@@ -144,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        btn_choose_image2.setOnClickListener(new View.OnClickListener(){
+        btn_choose_folder.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
                 Intent pickIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
