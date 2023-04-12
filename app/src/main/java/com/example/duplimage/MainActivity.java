@@ -3,6 +3,7 @@ package com.example.duplimage;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
@@ -52,16 +53,15 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    //Displays images and their duplicates
-    private RecyclerView recyclerView;
-    private List<Image> images = new ArrayList<>();
-
     //String file to limit choices to jpg and jpeg files only
     String[] mimeTypes = {"image/jpeg", "image/jpg"};
 
     //initialize request code for gallery picking
     public static final int PICK_IMAGE = 1;
     public static final int PICK_IMAGE2 = 2;
+
+    //initialize recyclerview module
+    RecyclerView recyclerView;
     //initialize view image module
     ImageView imgGallery;
     ImageView imgGallery2;
@@ -94,10 +94,16 @@ public class MainActivity extends AppCompatActivity {
         }
         //Initializes textview and imageview
         imgGallery = findViewById(R.id.imageView);
+        recyclerView = findViewById(R.id.recyclerview);
 //        imgGallery2 = findViewById(R.id.imageView2);
 //        MatchResult = findViewById(R.id.matchResult);
-//        recyclerView = findViewById(R.id.imageView);
-//        recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+
+        //Initialize the list of items for recyclerview
+        List<Item> items = new ArrayList<Item>();
+
+        //setting up the recyclerview
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(new MyAdapter(getApplicationContext(),items));
 
         //Initialize choose_image buttons
         Button btn_choose_image = findViewById(R.id.btn_choose_image);

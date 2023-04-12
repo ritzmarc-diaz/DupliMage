@@ -7,6 +7,11 @@
     android:background="@drawable/duplibg"
     tools:context=".MainActivity">
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/recyclerview"/>
+
     <Button
         android:id="@+id/btn_choose_image"
         android:layout_width="50dp"
