@@ -190,9 +190,6 @@ public class MainActivity extends AppCompatActivity {
         //Print Results
         System.out.println(results);
         System.out.println(descriptor1);
-
-        //update Match Result TextView
-        MatchResult.setText("Matching Rate: " + results + "%");
     }
 
     //Delete Image
