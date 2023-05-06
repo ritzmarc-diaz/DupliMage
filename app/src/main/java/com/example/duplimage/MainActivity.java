@@ -3,19 +3,13 @@ package com.example.duplimage;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.MediaScannerConnection;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,7 +19,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
@@ -39,13 +32,9 @@ import org.opencv.features2d.DescriptorMatcher;
 import org.opencv.features2d.ORB;
 import org.opencv.imgcodecs.Imgcodecs;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.example.duplimage.Image;
 
 public class MainActivity extends AppCompatActivity {
     //Loads OpenCV Integration
@@ -77,7 +66,9 @@ public class MainActivity extends AppCompatActivity {
     ImageView imgGallery;
     ImageView imgGallery2;
     //initialize text view module
-    TextView MatchResult;
+    //TextView MatchResult;
+    //global Results variable
+    public static String resultsText;
     //initialize mat for images
     Uri imageUri1;
     Uri imageUri2;
@@ -106,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
         //Initializes textview and imageview
         imgGallery = findViewById(R.id.imageView);
         imgGallery2 = findViewById(R.id.imageView2);
-        MatchResult = findViewById(R.id.matchResult);
+        //MatchResult = findViewById(R.id.matchResult);
 //        recyclerView = findViewById(R.id.imageView);
 //        recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
 
@@ -116,22 +107,7 @@ public class MainActivity extends AppCompatActivity {
         Button btn_start_matching = findViewById(R.id.btn_match_images);
         Button btn_delete_image = findViewById(R.id.btn_delete_image);
 
-//        //Get User's Photo
-//        Cursor cursor = getContentResolver().query(
-//                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-//                projection,
-//                null,
-//                null,
-//                MediaStore.Images.Media.DATE_ADDED + " DESC");
-//
-//        if (cursor != null) {
-//            while (cursor.moveToNext()) {
-//                @SuppressLint("Range") String path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
-//                Bitmap thumbnail = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(path), 200, 200);
-//                images.add(new Image(path, thumbnail));
-//            }
-//            cursor.close();
-//        }
+        btn_delete_image.setEnabled(false);
 
         //Button Click Listener
         btn_choose_image.setOnClickListener(new View.OnClickListener(){
@@ -157,8 +133,14 @@ public class MainActivity extends AppCompatActivity {
         //Match Images Button
         btn_start_matching.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View v){
-                SiftSurfAlgorithm();
+            public void onClick(View v)
+            {
+                //startActivity(new Intent (MainActivity.this, Results.class));
+                double results = SiftSurfAlgorithm();
+                if (results >= 97) {
+                    btn_delete_image.setEnabled(true);
+                }
+                startActivity(new Intent(MainActivity.this, Results.class));
             }
         });
 
@@ -172,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void SiftSurfAlgorithm(){
+    public double SiftSurfAlgorithm(){
         Mat image1 = Imgcodecs.imread(imagefile, Imgcodecs.IMREAD_GRAYSCALE);
         Mat image2 = Imgcodecs.imread(imagefile2, Imgcodecs.IMREAD_GRAYSCALE);
         //Initialize ORB Algorithm
@@ -206,13 +188,15 @@ public class MainActivity extends AppCompatActivity {
         System.out.println(results);
         System.out.println(descriptor1);
 
-        //update Match Result TextView
-        MatchResult.setText("Matching Rate: " + results + "%");
+        //update Result string value
+        resultsText = String.valueOf(results);
+
+        return results;
     }
 
     //Delete Image
     public void deleteImage() {
-        String file_dj_path = Environment.getExternalStorageDirectory() + "/DCIM/Judy.jpg";
+        String file_dj_path = imagefile2;
         File fdelete = new File(file_dj_path);
         if (fdelete.exists()) {
             if (fdelete.delete()) {

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/dmbg_new1"
+    tools:context=".StartScreen"
+    >
+
+    <TextView
+        android:id="@+id/welcome_to_duplimage"
+        android:layout_width="314dp"
+        android:layout_height="160dp"
+        android:layout_marginBottom="29dp"
+        android:fontFamily="@font/outfit_semibold"
+        android:text="Welcome To DupliMage"
+        android:textColor="#FFFFFF"
+        android:textSize="50sp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_getstarted"
+        tools:layout_editor_absoluteX="16dp" />
+
+    <TextView
+        android:id="@+id/start_today"
+        android:layout_width="200dp"
+        android:layout_height="39dp"
+        android:layout_marginBottom="20dp"
+        android:fontFamily="@font/outfit_regular"
+        android:text="Start matching today"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_getstarted"
+        tools:layout_editor_absoluteX="16dp" />
+
+    <Button
+        android:id="@+id/btn_getstarted"
+        android:layout_width="237dp"
+        android:layout_height="55dp"
+        android:background="@drawable/round_button"
+        android:fontFamily="@font/outfit_semibold"
+        android:text="Get Started"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.084"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
