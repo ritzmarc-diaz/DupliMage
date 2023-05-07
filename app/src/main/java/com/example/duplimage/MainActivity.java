@@ -2,6 +2,7 @@ package com.example.duplimage;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,6 +20,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
@@ -69,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
     //TextView MatchResult;
     //global Results variable
     public static String resultsText;
+    //coordinator layout for snackbar
+    CoordinatorLayout coordinatorLayout;
     //initialize mat for images
     Uri imageUri1;
     Uri imageUri2;
@@ -106,6 +111,8 @@ public class MainActivity extends AppCompatActivity {
         Button btn_choose_image2 = findViewById(R.id.btn_choose_image2);
         Button btn_start_matching = findViewById(R.id.btn_match_images);
         Button btn_delete_image = findViewById(R.id.btn_delete_image);
+
+        coordinatorLayout = findViewById(R.id.main_coordinator);
 
         btn_delete_image.setEnabled(false);
 
@@ -150,6 +157,9 @@ public class MainActivity extends AppCompatActivity {
 
             public void onClick(View v){
                 deleteImage();
+                Snackbar deleted = Snackbar.make(coordinatorLayout, "Image deleted successfully.", Snackbar.LENGTH_LONG);
+                deleted.show();
+                btn_delete_image.setEnabled(false);
             }
         });
     }

@@ -11,11 +11,11 @@
       "fieldsDescending": {}
     },
     "memoizedSize": -1,
-    "memoizedHashCode": 1163340751
+    "memoizedHashCode": -1285071076
   },
   {
     "level_": 0,
-    "message_": "rebuilding JSON D:\\DupliMage\\opencv\\.cxx\\Debug\\4r1u5u5j\\arm64-v8a\\android_gradle_build.json due to:",
+    "message_": "JSON \u0027D:\\DupliMage\\opencv\\.cxx\\Debug\\4r1u5u5j\\arm64-v8a\\android_gradle_build.json\u0027 was up-to-date",
     "file_": "D:\\DupliMage\\opencv\\libcxx_helper\\CMakeLists.txt",
     "tag_": "debug|arm64-v8a",
     "diagnosticCode_": 0,
@@ -25,147 +25,7 @@
       "fieldsDescending": {}
     },
     "memoizedSize": -1,
-    "memoizedHashCode": 1662471053
-  },
-  {
-    "level_": 0,
-    "message_": "- expected json D:\\DupliMage\\opencv\\.cxx\\Debug\\4r1u5u5j\\arm64-v8a\\android_gradle_build.json file is not present, will remove stale json folder",
-    "file_": "D:\\DupliMage\\opencv\\libcxx_helper\\CMakeLists.txt",
-    "tag_": "debug|arm64-v8a",
-    "diagnosticCode_": 0,
-    "memoizedIsInitialized": 1,
-    "unknownFields": {
-      "fields": {},
-      "fieldsDescending": {}
-    },
-    "memoizedSize": -1,
-    "memoizedHashCode": -785464227
-  },
-  {
-    "level_": 0,
-    "message_": "- missing previous command file D:\\DupliMage\\opencv\\.cxx\\Debug\\4r1u5u5j\\arm64-v8a\\metadata_generation_command.txt, will remove stale json folder",
-    "file_": "D:\\DupliMage\\opencv\\libcxx_helper\\CMakeLists.txt",
-    "tag_": "debug|arm64-v8a",
-    "diagnosticCode_": 0,
-    "memoizedIsInitialized": 1,
-    "unknownFields": {
-      "fields": {},
-      "fieldsDescending": {}
-    },
-    "memoizedSize": -1,
-    "memoizedHashCode": -1549701445
-  },
-  {
-    "level_": 0,
-    "message_": "- command changed from previous, will remove stale json folder",
-    "file_": "D:\\DupliMage\\opencv\\libcxx_helper\\CMakeLists.txt",
-    "tag_": "debug|arm64-v8a",
-    "diagnosticCode_": 0,
-    "memoizedIsInitialized": 1,
-    "unknownFields": {
-      "fields": {},
-      "fieldsDescending": {}
-    },
-    "memoizedSize": -1,
-    "memoizedHashCode": 640319997
-  },
-  {
-    "level_": 0,
-    "message_": "removing stale contents from \u0027D:\\DupliMage\\opencv\\.cxx\\Debug\\4r1u5u5j\\arm64-v8a\u0027",
-    "file_": "D:\\DupliMage\\opencv\\libcxx_helper\\CMakeLists.txt",
-    "tag_": "debug|arm64-v8a",
-    "diagnosticCode_": 0,
-    "memoizedIsInitialized": 1,
-    "unknownFields": {
-      "fields": {},
-      "fieldsDescending": {}
-    },
-    "memoizedSize": -1,
-    "memoizedHashCode": -618763291
-  },
-  {
-    "level_": 0,
-    "message_": "created folder \u0027D:\\DupliMage\\opencv\\.cxx\\Debug\\4r1u5u5j\\arm64-v8a\u0027",
-    "file_": "D:\\DupliMage\\opencv\\libcxx_helper\\CMakeLists.txt",
-    "tag_": "debug|arm64-v8a",
-    "diagnosticCode_": 0,
-    "memoizedIsInitialized": 1,
-    "unknownFields": {
-      "fields": {},
-      "fieldsDescending": {}
-    },
-    "memoizedSize": -1,
-    "memoizedHashCode": -586897423
-  },
-  {
-    "level_": 0,
-    "message_": "executing cmake Executable : C:\\Users\\ritzm\\AppData\\Local\\Android\\Sdk\\cmake\\3.18.1\\bin\\cmake.exe\narguments : \n-HD:\\DupliMage\\opencv\\libcxx_helper\n-DCMAKE_SYSTEM_NAME\u003dAndroid\n-DCMAKE_EXPORT_COMPILE_COMMANDS\u003dON\n-DCMAKE_SYSTEM_VERSION\u003d21\n-DANDROID_PLATFORM\u003dandroid-21\n-DANDROID_ABI\u003darm64-v8a\n-DCMAKE_ANDROID_ARCH_ABI\u003darm64-v8a\n-DANDROID_NDK\u003dC:\\Users\\ritzm\\AppData\\Local\\Android\\Sdk\\ndk\\21.4.7075529\n-DCMAKE_ANDROID_NDK\u003dC:\\Users\\ritzm\\AppData\\Local\\Android\\Sdk\\ndk\\21.4.7075529\n-DCMAKE_TOOLCHAIN_FILE\u003dC:\\Users\\ritzm\\AppData\\Local\\Android\\Sdk\\ndk\\21.4.7075529\\build\\cmake\\android.toolchain.cmake\n-DCMAKE_MAKE_PROGRAM\u003dC:\\Users\\ritzm\\AppData\\Local\\Android\\Sdk\\cmake\\3.18.1\\bin\\ninja.exe\n-DCMAKE_LIBRARY_OUTPUT_DIRECTORY\u003dD:\\DupliMage\\opencv\\build\\intermediates\\cxx\\Debug\\4r1u5u5j\\obj\\arm64-v8a\n-DCMAKE_RUNTIME_OUTPUT_DIRECTORY\u003dD:\\DupliMage\\opencv\\build\\intermediates\\cxx\\Debug\\4r1u5u5j\\obj\\arm64-v8a\n-DCMAKE_BUILD_TYPE\u003dDebug\n-BD:\\DupliMage\\opencv\\.cxx\\Debug\\4r1u5u5j\\arm64-v8a\n-GNinja\n-DANDROID_STL\u003dc++_shared\njvmArgs : \n\n",
-    "file_": "D:\\DupliMage\\opencv\\libcxx_helper\\CMakeLists.txt",
-    "tag_": "debug|arm64-v8a",
-    "diagnosticCode_": 0,
-    "memoizedIsInitialized": 1,
-    "unknownFields": {
-      "fields": {},
-      "fieldsDescending": {}
-    },
-    "memoizedSize": -1,
-    "memoizedHashCode": -380666940
-  },
-  {
-    "level_": 0,
-    "message_": "Executable : C:\\Users\\ritzm\\AppData\\Local\\Android\\Sdk\\cmake\\3.18.1\\bin\\cmake.exe\narguments : \n-HD:\\DupliMage\\opencv\\libcxx_helper\n-DCMAKE_SYSTEM_NAME\u003dAndroid\n-DCMAKE_EXPORT_COMPILE_COMMANDS\u003dON\n-DCMAKE_SYSTEM_VERSION\u003d21\n-DANDROID_PLATFORM\u003dandroid-21\n-DANDROID_ABI\u003darm64-v8a\n-DCMAKE_ANDROID_ARCH_ABI\u003darm64-v8a\n-DANDROID_NDK\u003dC:\\Users\\ritzm\\AppData\\Local\\Android\\Sdk\\ndk\\21.4.7075529\n-DCMAKE_ANDROID_NDK\u003dC:\\Users\\ritzm\\AppData\\Local\\Android\\Sdk\\ndk\\21.4.7075529\n-DCMAKE_TOOLCHAIN_FILE\u003dC:\\Users\\ritzm\\AppData\\Local\\Android\\Sdk\\ndk\\21.4.7075529\\build\\cmake\\android.toolchain.cmake\n-DCMAKE_MAKE_PROGRAM\u003dC:\\Users\\ritzm\\AppData\\Local\\Android\\Sdk\\cmake\\3.18.1\\bin\\ninja.exe\n-DCMAKE_LIBRARY_OUTPUT_DIRECTORY\u003dD:\\DupliMage\\opencv\\build\\intermediates\\cxx\\Debug\\4r1u5u5j\\obj\\arm64-v8a\n-DCMAKE_RUNTIME_OUTPUT_DIRECTORY\u003dD:\\DupliMage\\opencv\\build\\intermediates\\cxx\\Debug\\4r1u5u5j\\obj\\arm64-v8a\n-DCMAKE_BUILD_TYPE\u003dDebug\n-BD:\\DupliMage\\opencv\\.cxx\\Debug\\4r1u5u5j\\arm64-v8a\n-GNinja\n-DANDROID_STL\u003dc++_shared\njvmArgs : \n\n",
-    "file_": "D:\\DupliMage\\opencv\\libcxx_helper\\CMakeLists.txt",
-    "tag_": "debug|arm64-v8a",
-    "diagnosticCode_": 0,
-    "memoizedIsInitialized": 1,
-    "unknownFields": {
-      "fields": {},
-      "fieldsDescending": {}
-    },
-    "memoizedSize": -1,
-    "memoizedHashCode": -1042071933
-  },
-  {
-    "level_": 0,
-    "message_": "Exiting generation of D:\\DupliMage\\opencv\\.cxx\\Debug\\4r1u5u5j\\arm64-v8a\\compile_commands.json.bin normally",
-    "file_": "D:\\DupliMage\\opencv\\libcxx_helper\\CMakeLists.txt",
-    "tag_": "debug|arm64-v8a",
-    "diagnosticCode_": 0,
-    "memoizedIsInitialized": 1,
-    "unknownFields": {
-      "fields": {},
-      "fieldsDescending": {}
-    },
-    "memoizedSize": -1,
-    "memoizedHashCode": -460478137
-  },
-  {
-    "level_": 0,
-    "message_": "done executing cmake",
-    "file_": "D:\\DupliMage\\opencv\\libcxx_helper\\CMakeLists.txt",
-    "tag_": "debug|arm64-v8a",
-    "diagnosticCode_": 0,
-    "memoizedIsInitialized": 1,
-    "unknownFields": {
-      "fields": {},
-      "fieldsDescending": {}
-    },
-    "memoizedSize": -1,
-    "memoizedHashCode": 327973746
-  },
-  {
-    "level_": 0,
-    "message_": "write command file D:\\DupliMage\\opencv\\.cxx\\Debug\\4r1u5u5j\\arm64-v8a\\metadata_generation_command.txt",
-    "file_": "D:\\DupliMage\\opencv\\libcxx_helper\\CMakeLists.txt",
-    "tag_": "debug|arm64-v8a",
-    "diagnosticCode_": 0,
-    "memoizedIsInitialized": 1,
-    "unknownFields": {
-      "fields": {},
-      "fieldsDescending": {}
-    },
-    "memoizedSize": -1,
-    "memoizedHashCode": -993188991
+    "memoizedHashCode": 1238992721
   },
   {
     "level_": 0,
@@ -179,6 +39,6 @@
       "fieldsDescending": {}
     },
     "memoizedSize": -1,
-    "memoizedHashCode": -2028920466
+    "memoizedHashCode": -182364997
   }
 ]
