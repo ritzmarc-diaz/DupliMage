@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
+import androidx.documentfile.provider.DocumentFile;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
@@ -36,7 +37,10 @@ import org.opencv.features2d.ORB;
 import org.opencv.imgcodecs.Imgcodecs;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -54,17 +58,14 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    //Displays images and their duplicates
-    private RecyclerView recyclerView;
-    private List<Image> images = new ArrayList<>();
-    String[] projection = {MediaStore.Images.Media._ID, MediaStore.Images.Media.DATA};
-
     //String file to limit choices to jpg and jpeg files only
     String[] mimeTypes = {"image/jpeg", "image/jpg"};
 
     //initialize request code for gallery picking
     public static final int PICK_IMAGE = 1;
-    public static final int PICK_IMAGE2 = 2;
+//    public static final int PICK_IMAGE2 = 2;
+    public static final int CHOOSE_FOLDER = 2;
+
     //initialize view image module
     ImageView imgGallery;
     ImageView imgGallery2;
@@ -77,38 +78,51 @@ public class MainActivity extends AppCompatActivity {
     //initialize mat for images
     Uri imageUri1;
     Uri imageUri2;
+
+    //initialize directory path
+    DocumentFile pickedDir;
+
     //initialize file path for images
     String imagefile = "/sdcard/DCIM/heh.jpg";
     String imagefile2 = "/sdcard/DCIM/heh mcdo.jpg";
+    ArrayList<String> filePathList = new ArrayList<String>();
+    ArrayList<Integer> deleteIndex = new ArrayList<Integer>();
+
+    //initialize matched image threshold counter
+    int count;
+
+    //initialize results array
+    ArrayList<Double> results = new ArrayList<Double>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 4);
             }
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 5);
             }
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.MANAGE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.MANAGE_EXTERNAL_STORAGE}, 0);
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.MANAGE_EXTERNAL_STORAGE}, 6);
             }
         }
         //Initializes textview and imageview
         imgGallery = findViewById(R.id.imageView);
-        imgGallery2 = findViewById(R.id.imageView2);
+//        imgGallery2 = findViewById(R.id.imageView2);
         //MatchResult = findViewById(R.id.matchResult);
 //        recyclerView = findViewById(R.id.imageView);
 //        recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
 
         //Initialize choose_image buttons
         Button btn_choose_image = findViewById(R.id.btn_choose_image);
-        Button btn_choose_image2 = findViewById(R.id.btn_choose_image2);
+        Button btn_choose_folder = findViewById(R.id.btn_choose_folder);
+//        Button btn_choose_image2 = findViewById(R.id.btn_choose_image2);
         Button btn_start_matching = findViewById(R.id.btn_match_images);
         Button btn_delete_image = findViewById(R.id.btn_delete_image);
 
@@ -127,13 +141,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        btn_choose_image2.setOnClickListener(new View.OnClickListener(){
+//        btn_choose_image2.setOnClickListener(new View.OnClickListener(){
+//            @Override
+//            public void onClick(View v){
+//                Intent pickIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//                pickIntent.setType("image/jpeg");
+//                pickIntent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+//                startActivityForResult(pickIntent, PICK_IMAGE2);
+//            }
+//        });
+
+        btn_choose_folder.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                Intent pickIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                pickIntent.setType("image/jpeg");
-                pickIntent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
-                startActivityForResult(pickIntent, PICK_IMAGE2);
+                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+                startActivityForResult(intent, CHOOSE_FOLDER);
             }
         });
 
@@ -143,11 +165,20 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v)
             {
                 //startActivity(new Intent (MainActivity.this, Results.class));
-                double results = SiftSurfAlgorithm();
-                if (results >= 97) {
-                    btn_delete_image.setEnabled(true);
+                count = 0;
+                for(int i=0; i < filePathList.size(); i++){
+                    imagefile2 = filePathList.get(i);
+                    results.add(SiftSurfAlgorithm());
+                    if (results.get(i) >= 97) {
+                        if (btn_delete_image.isEnabled()){
+                            return;
+                        }
+                        deleteIndex.add(count);
+                        count++;
+                        btn_delete_image.setEnabled(true);
+                    }
                 }
-                startActivity(new Intent(MainActivity.this, Results.class));
+//                startActivity(new Intent(MainActivity.this, Results.class));
             }
         });
 
@@ -167,6 +198,7 @@ public class MainActivity extends AppCompatActivity {
     public double SiftSurfAlgorithm(){
         Mat image1 = Imgcodecs.imread(imagefile, Imgcodecs.IMREAD_GRAYSCALE);
         Mat image2 = Imgcodecs.imread(imagefile2, Imgcodecs.IMREAD_GRAYSCALE);
+        System.out.println(imagefile + " " + imagefile2);
         //Initialize ORB Algorithm
         ORB detector = ORB.create();
         //Initialize Image Keypoints
@@ -183,11 +215,11 @@ public class MainActivity extends AppCompatActivity {
         //Matching the images
         MatOfDMatch matches = new MatOfDMatch();
         matcher.match(descriptor1, descriptor2, matches);
-        List<DMatch> listofMatches = matches.toList();
-        //Print the List of Matches
-        for(int i=0; i<listofMatches.size();i++){
-            System.out.println("List of Matches: " + i + listofMatches.get(i));
-        }
+//        List<DMatch> listofMatches = matches.toList();
+//        //Print the List of Matches
+//        for(int i=0; i<listofMatches.size();i++){
+//            System.out.println("List of Matches: " + i + listofMatches.get(i));
+//        }
         //Compute Results
         double compute_keypoint1 = keypoints1.rows();
         double compute_keypoint2 = keypoints2.rows();
@@ -206,18 +238,34 @@ public class MainActivity extends AppCompatActivity {
 
     //Delete Image
     public void deleteImage() {
-        String file_dj_path = imagefile2;
-        File fdelete = new File(file_dj_path);
-        if (fdelete.exists()) {
-            if (fdelete.delete()) {
-                Log.e("-->", "file deleted :" + file_dj_path);
-                callBroadCast();
-            } else {
-                Log.e("-->", "file not deleted :" + file_dj_path);
+        for(int i=0; i < deleteIndex.size(); i++){
+            imagefile2 = filePathList.get(deleteIndex.get(i));
+            if (imagefile != imagefile2){
+                String file_dj_path = imagefile2;
+                File fdelete = new File(file_dj_path);
+                if (fdelete.exists()) {
+                    if (fdelete.delete()) {
+                        Log.e("-->", "file deleted :" + file_dj_path);
+                        callBroadCast();
+                    } else {
+                        Log.e("-->", "file not deleted :" + file_dj_path);
+                    }
+                } else {
+                    Log.e("-->", "File does not exist.");
+                }
             }
-        } else{
-            Log.e("-->", "File does not exist.");
         }
+    }
+
+    //Get Raw File Path
+    private String getRawPathFromUri(Uri uri) {
+        String[] projection = {MediaStore.Images.Media.DATA};
+        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        String rawPath = cursor.getString(column_index);
+        cursor.close();
+        return rawPath;
     }
 
     //Refreshes the Gallery (showing results of file deletion)
@@ -241,20 +289,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //get File Path of Selected Image
-    private String getRealPathFromURI(Uri contentURI) {
-
-        String thePath = "no-path-found";
-        String[] filePathColumn = {MediaStore.Images.Media.DISPLAY_NAME};
-        Cursor cursor = getContentResolver().query(contentURI, filePathColumn, null, null, null);
-        if(cursor.moveToFirst()){
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            thePath = cursor.getString(columnIndex);
-        }
-        cursor.close();
-        return  thePath;
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
         super.onActivityResult(requestCode, resultCode, data);
@@ -273,18 +307,49 @@ public class MainActivity extends AppCompatActivity {
                 imagefile = cursor.getString(column_index);
                 cursor.close();
             }
-            if (requestCode==PICK_IMAGE2){
-                // for gallery
-                imgGallery2.setImageURI(data.getData());
-                imageUri2 = data.getData();
+//            if (requestCode==PICK_IMAGE2){
+//                // for gallery
+//                imgGallery2.setImageURI(data.getData());
+//                imageUri2 = data.getData();
+//
+//                //Find image file path
+//                String[] projection = { MediaStore.Images.Media.DATA };
+//                Cursor cursor = getContentResolver().query(imageUri2, projection, null, null, null);
+//                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+//                cursor.moveToFirst();
+//                imagefile2 = cursor.getString(column_index);
+//                cursor.close();
+//            }
+            if (requestCode==CHOOSE_FOLDER){
+                //Reads the data to determine the folder chosen
+                Uri treeUri = data.getData();
+                pickedDir = DocumentFile.fromTreeUri(this, treeUri);
 
-                //Find image file path
-                String[] projection = { MediaStore.Images.Media.DATA };
-                Cursor cursor = getContentResolver().query(imageUri2, projection, null, null, null);
-                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                cursor.moveToFirst();
-                imagefile2 = cursor.getString(column_index);
-                cursor.close();
+                //Initialize list of file paths
+                List<String> filePaths = new ArrayList<>();
+
+                //Makes sure the files are of .jpeg and stores them inside the filePaths arraylist
+                for (DocumentFile file : pickedDir.listFiles()) {
+                    String uriString = file.getUri().toString();
+                    imageUri2 = Uri.parse(uriString);
+
+                    String decodedUriString = null;
+                    try {
+                        decodedUriString = URLDecoder.decode(uriString, "UTF-8");
+                    } catch (UnsupportedEncodingException e) {
+                        throw new RuntimeException(e);
+                    }
+                    String filePath = Uri.parse(decodedUriString).getPath();
+                    filePath = filePath.replace("%3A", ":").replace("%2F", "/");
+                    int lastIndex = filePath.lastIndexOf(":");
+                    String substring = filePath.substring(lastIndex + 1);
+                    filePath = "/storage/emulated/0/" + substring;
+                    filePaths.add(filePath);
+                }
+
+                //Store all the file path in an array
+                filePathList = new ArrayList<>(Arrays.asList(filePaths.toArray(new String[0])));
+//                System.out.println(filePathList);
             }
         }
     }
