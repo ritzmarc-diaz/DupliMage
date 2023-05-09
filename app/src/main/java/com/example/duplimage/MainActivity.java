@@ -169,13 +169,14 @@ public class MainActivity extends AppCompatActivity {
                 for(int i=0; i < filePathList.size(); i++){
                     imagefile2 = filePathList.get(i);
                     results.add(SiftSurfAlgorithm());
-                    if (results.get(i) >= 97) {
-                        if (btn_delete_image.isEnabled()){
-                            return;
+                    if (imagefile2.equals(imagefile)){
+                        return;
+                    } else {
+                        if (results.get(i) >= 97) {
+                            deleteIndex.add(count);
+                            count++;
+                            btn_delete_image.setEnabled(true);
                         }
-                        deleteIndex.add(count);
-                        count++;
-                        btn_delete_image.setEnabled(true);
                     }
                 }
 //                startActivity(new Intent(MainActivity.this, Results.class));
@@ -188,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
 
             public void onClick(View v){
                 deleteImage();
-                Snackbar deleted = Snackbar.make(coordinatorLayout, "Image deleted successfully.", Snackbar.LENGTH_LONG);
+                Snackbar deleted = Snackbar.make(coordinatorLayout, deleteIndex.size() + " Image/s deleted successfully.", Snackbar.LENGTH_LONG);
                 deleted.show();
                 btn_delete_image.setEnabled(false);
             }
@@ -198,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
     public double SiftSurfAlgorithm(){
         Mat image1 = Imgcodecs.imread(imagefile, Imgcodecs.IMREAD_GRAYSCALE);
         Mat image2 = Imgcodecs.imread(imagefile2, Imgcodecs.IMREAD_GRAYSCALE);
-        System.out.println(imagefile + " " + imagefile2);
+        System.out.println(imagefile + " && " + imagefile2);
         //Initialize ORB Algorithm
         ORB detector = ORB.create();
         //Initialize Image Keypoints
@@ -240,19 +241,17 @@ public class MainActivity extends AppCompatActivity {
     public void deleteImage() {
         for(int i=0; i < deleteIndex.size(); i++){
             imagefile2 = filePathList.get(deleteIndex.get(i));
-            if (imagefile != imagefile2){
-                String file_dj_path = imagefile2;
-                File fdelete = new File(file_dj_path);
-                if (fdelete.exists()) {
-                    if (fdelete.delete()) {
-                        Log.e("-->", "file deleted :" + file_dj_path);
-                        callBroadCast();
-                    } else {
-                        Log.e("-->", "file not deleted :" + file_dj_path);
-                    }
+            String file_dj_path = imagefile2;
+            File fdelete = new File(file_dj_path);
+            if (fdelete.exists()) {
+                if (fdelete.delete()) {
+                    Log.e("-->", "file deleted :" + file_dj_path);
+                    callBroadCast();
                 } else {
-                    Log.e("-->", "File does not exist.");
+                    Log.e("-->", "file not deleted :" + file_dj_path);
                 }
+            } else {
+                Log.e("-->", "File does not exist.");
             }
         }
     }
