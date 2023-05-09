@@ -26,6 +26,6 @@ public class Results extends AppCompatActivity {
         TextView MatchResult;
         MatchResult = findViewById(R.id.matchResult);
 
-        MatchResult.setText("Match Rate: " + MainActivity.resultsText + "%" );
+        MatchResult.setText(MainActivity.resultsText + " multiple similar/duplicate images detected" );
     }
 }

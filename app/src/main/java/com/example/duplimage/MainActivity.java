@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.documentfile.provider.DocumentFile;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.content.Intent;
@@ -27,7 +26,6 @@ import com.google.android.material.snackbar.Snackbar;
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
-import org.opencv.core.DMatch;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfDMatch;
 import org.opencv.core.MatOfKeyPoint;
@@ -68,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
 
     //initialize view image module
     ImageView imgGallery;
-    ImageView imgGallery2;
     //initialize text view module
     //TextView MatchResult;
     //global Results variable
@@ -85,14 +82,14 @@ public class MainActivity extends AppCompatActivity {
     //initialize file path for images
     String imagefile = "/sdcard/DCIM/heh.jpg";
     String imagefile2 = "/sdcard/DCIM/heh mcdo.jpg";
-    ArrayList<String> filePathList = new ArrayList<String>();
-    ArrayList<Integer> deleteIndex = new ArrayList<Integer>();
+    ArrayList<String> filePathList = new ArrayList<>();
+    ArrayList<Integer> deleteIndex = new ArrayList<>();
 
     //initialize matched image threshold counter
     int count;
 
     //initialize results array
-    ArrayList<Double> results = new ArrayList<Double>();
+    ArrayList<Double> results = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,6 +125,8 @@ public class MainActivity extends AppCompatActivity {
 
         coordinatorLayout = findViewById(R.id.main_coordinator);
 
+        btn_choose_folder.setEnabled(false);
+        btn_start_matching.setEnabled(false);
         btn_delete_image.setEnabled(false);
 
         //Button Click Listener
@@ -138,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
                 pickIntent.setType("image/jpeg");
                 pickIntent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
                 startActivityForResult(pickIntent, PICK_IMAGE);
+                btn_choose_folder.setEnabled(true);
             }
         });
 
@@ -154,8 +154,12 @@ public class MainActivity extends AppCompatActivity {
         btn_choose_folder.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
+                filePathList.clear();
+                deleteIndex.clear();
+                btn_delete_image.setEnabled(false);
                 Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
                 startActivityForResult(intent, CHOOSE_FOLDER);
+                btn_start_matching.setEnabled(true);
             }
         });
 
@@ -166,11 +170,11 @@ public class MainActivity extends AppCompatActivity {
             {
                 //startActivity(new Intent (MainActivity.this, Results.class));
                 count = 0;
+                deleteIndex.clear();
                 for(int i=0; i < filePathList.size(); i++){
                     imagefile2 = filePathList.get(i);
                     results.add(SiftSurfAlgorithm());
                     if (imagefile2.equals(imagefile)){
-                        return;
                     } else {
                         if (results.get(i) >= 97) {
                             deleteIndex.add(count);
@@ -179,7 +183,12 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 }
-//                startActivity(new Intent(MainActivity.this, Results.class));
+                //update Result string value
+                resultsText = String.valueOf(deleteIndex.size());
+                startActivity(new Intent(MainActivity.this, Results.class));
+
+                //makes sure match button isn't redundant
+                btn_start_matching.setEnabled(false);
             }
         });
 
@@ -192,6 +201,9 @@ public class MainActivity extends AppCompatActivity {
                 Snackbar deleted = Snackbar.make(coordinatorLayout, deleteIndex.size() + " Image/s deleted successfully.", Snackbar.LENGTH_LONG);
                 deleted.show();
                 btn_delete_image.setEnabled(false);
+                btn_start_matching.setEnabled(true);
+                filePathList.clear();
+                deleteIndex.clear();
             }
         });
     }
@@ -199,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
     public double SiftSurfAlgorithm(){
         Mat image1 = Imgcodecs.imread(imagefile, Imgcodecs.IMREAD_GRAYSCALE);
         Mat image2 = Imgcodecs.imread(imagefile2, Imgcodecs.IMREAD_GRAYSCALE);
-        System.out.println(imagefile + " && " + imagefile2);
+//        System.out.println(imagefile + " && " + imagefile2);
         //Initialize ORB Algorithm
         ORB detector = ORB.create();
         //Initialize Image Keypoints
@@ -228,11 +240,8 @@ public class MainActivity extends AppCompatActivity {
         double compute_matches = matches.rows();
         double results = (compute_matches / total_keypoints) * 100;
         //Print Results
-        System.out.println(results);
-        System.out.println(descriptor1);
-
-        //update Result string value
-        resultsText = String.valueOf(results);
+//        System.out.println(results);
+//        System.out.println(descriptor1);
 
         return results;
     }
