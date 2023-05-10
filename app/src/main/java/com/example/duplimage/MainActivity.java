@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,6 +21,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -64,6 +68,9 @@ public class MainActivity extends AppCompatActivity {
 //    public static final int PICK_IMAGE2 = 2;
     public static final int CHOOSE_FOLDER = 2;
 
+    //initialize progress bar module
+    double currentProgress = 0;
+
     //initialize view image module
     ImageView imgGallery;
     //initialize text view module
@@ -87,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
 
     //initialize matched image threshold counter
     int count;
+    double fileSize;
 
     //initialize results array
     ArrayList<Double> results = new ArrayList<>();
@@ -111,6 +119,8 @@ public class MainActivity extends AppCompatActivity {
         }
         //Initializes textview and imageview
         imgGallery = findViewById(R.id.imageView);
+        LinearLayout loadingLayout = findViewById(R.id.loadingLayout);
+        ProgressBar loadingProgressBar = findViewById(R.id.loadingProgressBar);
 //        imgGallery2 = findViewById(R.id.imageView2);
         //MatchResult = findViewById(R.id.matchResult);
 //        recyclerView = findViewById(R.id.imageView);
@@ -133,6 +143,9 @@ public class MainActivity extends AppCompatActivity {
         btn_choose_image.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
+                loadingProgressBar.setProgress(0);
+                filePathList.clear();
+                deleteIndex.clear();
                 Intent pickIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 pickIntent.setType("image/jpeg");
                 pickIntent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
@@ -154,6 +167,7 @@ public class MainActivity extends AppCompatActivity {
         btn_choose_folder.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
+                loadingProgressBar.setProgress(0);
                 filePathList.clear();
                 deleteIndex.clear();
                 btn_delete_image.setEnabled(false);
@@ -169,10 +183,15 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v)
             {
                 //startActivity(new Intent (MainActivity.this, Results.class));
+                currentProgress = 0;
                 count = 0;
                 deleteIndex.clear();
-                for(int i=0; i < filePathList.size(); i++){
+                results.clear();
+                fileSize = filePathList.size();
+                for(int i=0; i < fileSize; i++){
+                    currentProgress = ((i+1)/fileSize)*100;
                     imagefile2 = filePathList.get(i);
+                    loadingProgressBar.setProgress((int) currentProgress);
                     results.add(SiftSurfAlgorithm());
                     if (imagefile2.equals(imagefile)){
                     } else {
@@ -183,6 +202,8 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 }
+                System.out.println(filePathList + " & " + deleteIndex);
+
                 //update Result string value
                 resultsText = String.valueOf(deleteIndex.size());
                 startActivity(new Intent(MainActivity.this, Results.class));
@@ -265,17 +286,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //Get Raw File Path
-    private String getRawPathFromUri(Uri uri) {
-        String[] projection = {MediaStore.Images.Media.DATA};
-        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        String rawPath = cursor.getString(column_index);
-        cursor.close();
-        return rawPath;
-    }
-
     //Refreshes the Gallery (showing results of file deletion)
     public void callBroadCast() {
         if (Build.VERSION.SDK_INT >= 14) {
@@ -338,21 +348,23 @@ public class MainActivity extends AppCompatActivity {
 
                 //Makes sure the files are of .jpeg and stores them inside the filePaths arraylist
                 for (DocumentFile file : pickedDir.listFiles()) {
-                    String uriString = file.getUri().toString();
-                    imageUri2 = Uri.parse(uriString);
+                    if (file.getName().endsWith(".jpg")){
+                        String uriString = file.getUri().toString();
+                        imageUri2 = Uri.parse(uriString);
 
-                    String decodedUriString = null;
-                    try {
-                        decodedUriString = URLDecoder.decode(uriString, "UTF-8");
-                    } catch (UnsupportedEncodingException e) {
-                        throw new RuntimeException(e);
+                        String decodedUriString = null;
+                        try {
+                            decodedUriString = URLDecoder.decode(uriString, "UTF-8");
+                        } catch (UnsupportedEncodingException e) {
+                            throw new RuntimeException(e);
+                        }
+                        String filePath = Uri.parse(decodedUriString).getPath();
+                        filePath = filePath.replace("%3A", ":").replace("%2F", "/");
+                        int lastIndex = filePath.lastIndexOf(":");
+                        String substring = filePath.substring(lastIndex + 1);
+                        filePath = "/storage/emulated/0/" + substring;
+                        filePaths.add(filePath);
                     }
-                    String filePath = Uri.parse(decodedUriString).getPath();
-                    filePath = filePath.replace("%3A", ":").replace("%2F", "/");
-                    int lastIndex = filePath.lastIndexOf(":");
-                    String substring = filePath.substring(lastIndex + 1);
-                    filePath = "/storage/emulated/0/" + substring;
-                    filePaths.add(filePath);
                 }
 
                 //Store all the file path in an array
