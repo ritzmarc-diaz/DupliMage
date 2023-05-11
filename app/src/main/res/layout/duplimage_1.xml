@@ -46,4 +46,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/btn_manage"
+        android:layout_width="237dp"
+        android:layout_height="55dp"
+        android:background="@drawable/round_button"
+        android:fontFamily="@font/outfit_semibold"
+        android:text="Manage Access"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.08"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.621" />
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
