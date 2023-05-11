@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.documentfile.provider.DocumentFile;
 
 import android.Manifest;
@@ -17,6 +18,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -64,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
     String[] mimeTypes = {"image/jpeg", "image/jpg"};
 
     //initialize request code for gallery picking
+    public static final int REQ_PERM = 0;
     public static final int PICK_IMAGE = 1;
 //    public static final int PICK_IMAGE2 = 2;
     public static final int CHOOSE_FOLDER = 2;
@@ -90,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Integer> deleteIndex = new ArrayList<>();
 
     //initialize matched image threshold counter
-    int count;
     int fileSize;
 
     //initialize results array
@@ -99,20 +101,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 4);
-            }
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 5);
-            }
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.MANAGE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.MANAGE_EXTERNAL_STORAGE}, 6);
-            }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.MANAGE_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[] {Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.MANAGE_EXTERNAL_STORAGE},
+                    REQ_PERM);
         }
         //Initializes textview and imageview
         imgGallery = findViewById(R.id.imageView);
@@ -180,7 +180,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v)
             {
                 //startActivity(new Intent (MainActivity.this, Results.class));
-                count = 0;
                 deleteIndex.clear();
                 results.clear();
                 fileSize = filePathList.size();
@@ -192,13 +191,12 @@ public class MainActivity extends AppCompatActivity {
                     if (imagefile2.equals(imagefile)){
                     } else {
                         if (results.get(i) >= 97) {
-                            deleteIndex.add(count);
-                            count++;
+                            deleteIndex.add(i);
                             btn_delete_image.setEnabled(true);
                         }
                     }
                 }
-                System.out.println(filePathList + " & " + deleteIndex);
+//                System.out.println(filePathList + " & " + deleteIndex);
 
                 //update Result string value
                 resultsText = String.valueOf(deleteIndex.size());
@@ -381,6 +379,21 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Log.d("OpenCV", "OpenCV library found inside package. Using it!");
             mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults){
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQ_PERM) {
+            if (grantResults.length > 0 &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED &&
+                    grantResults[1] == PackageManager.PERMISSION_GRANTED &&
+                    grantResults[2] == PackageManager.PERMISSION_GRANTED) {
+                // Permissions granted
+            } else {
+                // Permissions denied
+            }
         }
     }
 }
