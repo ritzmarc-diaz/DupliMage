@@ -68,9 +68,6 @@ public class MainActivity extends AppCompatActivity {
 //    public static final int PICK_IMAGE2 = 2;
     public static final int CHOOSE_FOLDER = 2;
 
-    //initialize progress bar module
-    double currentProgress = 0;
-
     //initialize view image module
     ImageView imgGallery;
     //initialize text view module
@@ -94,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
 
     //initialize matched image threshold counter
     int count;
-    double fileSize;
+    int fileSize;
 
     //initialize results array
     ArrayList<Double> results = new ArrayList<>();
@@ -183,15 +180,14 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v)
             {
                 //startActivity(new Intent (MainActivity.this, Results.class));
-                currentProgress = 0;
                 count = 0;
                 deleteIndex.clear();
                 results.clear();
                 fileSize = filePathList.size();
+                loadingProgressBar.setMax(fileSize);
                 for(int i=0; i < fileSize; i++){
-                    currentProgress = ((i+1)/fileSize)*100;
                     imagefile2 = filePathList.get(i);
-                    loadingProgressBar.setProgress((int) currentProgress);
+                    loadingProgressBar.setProgress(i+1);
                     results.add(SiftSurfAlgorithm());
                     if (imagefile2.equals(imagefile)){
                     } else {
