@@ -116,7 +116,6 @@ public class MainActivity extends AppCompatActivity {
         }
         //Initializes textview and imageview
         imgGallery = findViewById(R.id.imageView);
-        LinearLayout loadingLayout = findViewById(R.id.loadingLayout);
         ProgressBar loadingProgressBar = findViewById(R.id.loadingProgressBar);
 //        imgGallery2 = findViewById(R.id.imageView2);
         //MatchResult = findViewById(R.id.matchResult);
@@ -171,6 +170,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
                 startActivityForResult(intent, CHOOSE_FOLDER);
                 btn_start_matching.setEnabled(true);
+                loadingProgressBar.setVisibility(View.VISIBLE);
             }
         });
 
@@ -184,9 +184,9 @@ public class MainActivity extends AppCompatActivity {
                 results.clear();
                 fileSize = filePathList.size();
                 loadingProgressBar.setMax(fileSize);
+//                loadingLayout.setVisibility(View.VISIBLE);
                 for(int i=0; i < fileSize; i++){
                     imagefile2 = filePathList.get(i);
-                    loadingProgressBar.setProgress(i+1);
                     results.add(SiftSurfAlgorithm());
                     if (imagefile2.equals(imagefile)){
                     } else {
@@ -196,6 +196,8 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 }
+                loadingProgressBar.setVisibility(View.GONE);
+//                loadingLayout.setVisibility(View.INVISIBLE);
 //                System.out.println(filePathList + " & " + deleteIndex);
 
                 //update Result string value

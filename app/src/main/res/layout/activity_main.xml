@@ -102,15 +102,19 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1"
             android:background="@android:color/transparent"
-            android:padding="16dp">>
+            android:padding="16dp">
 
             <ProgressBar
                 android:id="@+id/loadingProgressBar"
+                android:animationResolution="300"
+                android:indeterminate="true"
+                android:indeterminateBehavior="cycle"
                 style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:progressDrawable="@drawable/custom_progress_bg"/>
+                android:progressDrawable="@drawable/custom_progress_bg"
+                android:visibility="gone"/>
 
         </LinearLayout>
 
