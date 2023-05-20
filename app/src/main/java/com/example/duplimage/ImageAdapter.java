@@ -20,6 +20,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
     private List<String> selectedImages;
     private MainActivity activity;
 
+
     public ImageAdapter(List<String> imageList, View.OnClickListener onClickListener) {
         this.imageList = imageList;
         selectionList = new ArrayList<>();
@@ -59,6 +60,10 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
         return imageList.size();
     }
 
+    public List<String> getSelectedImages() {
+        return selectedImages;
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private ImageView imageView;
         private ImageView selectionIndicator;
@@ -68,6 +73,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
             itemView.setOnClickListener(this);
             imageView = itemView.findViewById(R.id.imageView);
             selectionIndicator = itemView.findViewById(R.id.selectionIndicator);
+
         }
 
         @Override
@@ -84,6 +90,8 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
                 selectedImages.remove(imagePath);
             }
         }
+
+
 
     }
 }

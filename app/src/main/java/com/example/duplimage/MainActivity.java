@@ -103,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> filePathList = new ArrayList<>();
     ArrayList<Integer> deleteIndex = new ArrayList<>();
     ArrayList<String> filePaths = new ArrayList<>();
+    List<String> selectedImages;
 
     //initialize matched image threshold counter
     int fileSize;
@@ -247,6 +248,8 @@ public class MainActivity extends AppCompatActivity {
                 //Create and set the Image Adapter
                 final ImageAdapter imageAdapter = new ImageAdapter(filePaths, this::onClick);
                 galleryLayout.setAdapter(imageAdapter);
+
+                selectedImages = imageAdapter.getSelectedImages();
             }
         });
 
@@ -269,10 +272,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
 
             public void onClick(View v){
+                int count = selectedImages.size();
                 deleteImage();
-                Snackbar deleted = Snackbar.make(coordinatorLayout, deleteIndex.size() + " Image/s deleted successfully.", Snackbar.LENGTH_LONG);
+                Snackbar deleted = Snackbar.make(coordinatorLayout, count + " Image/s deleted successfully.", Snackbar.LENGTH_LONG);
                 deleted.show();
                 btn_delete_image.setEnabled(false);
+                btn_view_image.setEnabled(false);
                 btn_start_matching.setEnabled(true);
                 filePathList.clear();
                 deleteIndex.clear();
@@ -352,9 +357,8 @@ public class MainActivity extends AppCompatActivity {
 
     //Delete Image
     public void deleteImage() {
-
-        for(int i=0; i < filePathList.size(); i++){
-            imagefile2 = filePathList.get(i);
+        for(int i=0; i < selectedImages.size(); i++){
+            imagefile2 = selectedImages.get(i);
             String file_dj_path = imagefile2;
             File fdelete = new File(file_dj_path);
             if (fdelete.exists()) {
@@ -512,9 +516,5 @@ public class MainActivity extends AppCompatActivity {
                 // Permissions denied
             }
         }
-    }
-
-    public void selectedFiles(List<String> selectedImages) {
-        filePathList = (ArrayList<String>) selectedImages;
     }
 }
