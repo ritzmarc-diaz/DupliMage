@@ -104,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Integer> deleteIndex = new ArrayList<>();
     ArrayList<String> filePaths = new ArrayList<>();
     List<String> selectedImages;
+    Boolean isAllSelected;
 
     //initialize matched image threshold counter
     int fileSize;
@@ -146,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
         Button btn_start_matching = findViewById(R.id.btn_match_images);
         Button btn_view_image = findViewById(R.id.btn_view_images);
         ImageButton btn_back = findViewById(R.id.btn_back);
+        Button btn_select_all = findViewById(R.id.btn_select_all);
         Button btn_delete_image = findViewById(R.id.btn_delete_image);
 
         coordinatorLayout = findViewById(R.id.main_coordinator);
@@ -200,6 +202,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v)
             {
                 //startActivity(new Intent (MainActivity.this, Results.class));
+                isAllSelected = false;
                 deleteIndex.clear();
                 results.clear();
                 fileSize = filePathList.size();
@@ -232,6 +235,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v){
                 galleryLayout.setVisibility(View.VISIBLE);
                 btn_back.setVisibility(View.VISIBLE);
+                btn_select_all.setVisibility(View.VISIBLE);
 
                 btn_choose_image.setVisibility(View.GONE);
                 btn_choose_folder.setVisibility(View.GONE);
@@ -259,6 +263,25 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 galleryLayout.setVisibility(View.GONE);
                 btn_back.setVisibility(View.GONE);
+                btn_select_all.setVisibility(View.GONE);
+
+                btn_choose_image.setVisibility(View.VISIBLE);
+                btn_choose_folder.setVisibility(View.VISIBLE);
+                btn_delete_image.setVisibility(View.VISIBLE);
+                btn_view_image.setVisibility(View.VISIBLE);
+            }
+        });
+
+        //Select All Button for View Gallery
+        btn_select_all.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectedImages = filePaths;
+                System.out.println(selectedImages);
+
+                galleryLayout.setVisibility(View.GONE);
+                btn_back.setVisibility(View.GONE);
+                btn_select_all.setVisibility(View.GONE);
 
                 btn_choose_image.setVisibility(View.VISIBLE);
                 btn_choose_folder.setVisibility(View.VISIBLE);
