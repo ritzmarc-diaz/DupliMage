@@ -6,6 +6,9 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.documentfile.provider.DocumentFile;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.content.Intent;
@@ -21,17 +24,23 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.Gallery;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
+import org.opencv.core.DMatch;
+import org.opencv.core.KeyPoint;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfDMatch;
 import org.opencv.core.MatOfKeyPoint;
@@ -68,8 +77,10 @@ public class MainActivity extends AppCompatActivity {
     //initialize request code for gallery picking
     public static final int REQ_PERM = 0;
     public static final int PICK_IMAGE = 1;
-//    public static final int PICK_IMAGE2 = 2;
+    //    public static final int PICK_IMAGE2 = 2;
     public static final int CHOOSE_FOLDER = 2;
+
+    int spanCount = 3;
 
     //initialize view image module
     ImageView imgGallery;
@@ -91,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
     String imagefile2 = "/sdcard/DCIM/heh mcdo.jpg";
     ArrayList<String> filePathList = new ArrayList<>();
     ArrayList<Integer> deleteIndex = new ArrayList<>();
+    ArrayList<String> filePaths = new ArrayList<>();
 
     //initialize matched image threshold counter
     int fileSize;
@@ -114,9 +126,13 @@ public class MainActivity extends AppCompatActivity {
                             Manifest.permission.MANAGE_EXTERNAL_STORAGE},
                     REQ_PERM);
         }
+
+
+
         //Initializes textview and imageview
         imgGallery = findViewById(R.id.imageView);
         ProgressBar loadingProgressBar = findViewById(R.id.loadingProgressBar);
+        RecyclerView galleryLayout = findViewById(R.id.galleryLayout);
 //        imgGallery2 = findViewById(R.id.imageView2);
         //MatchResult = findViewById(R.id.matchResult);
 //        recyclerView = findViewById(R.id.imageView);
@@ -127,12 +143,15 @@ public class MainActivity extends AppCompatActivity {
         Button btn_choose_folder = findViewById(R.id.btn_choose_folder);
 //        Button btn_choose_image2 = findViewById(R.id.btn_choose_image2);
         Button btn_start_matching = findViewById(R.id.btn_match_images);
+        Button btn_view_image = findViewById(R.id.btn_view_images);
+        ImageButton btn_back = findViewById(R.id.btn_back);
         Button btn_delete_image = findViewById(R.id.btn_delete_image);
 
         coordinatorLayout = findViewById(R.id.main_coordinator);
 
         btn_choose_folder.setEnabled(false);
         btn_start_matching.setEnabled(false);
+        btn_view_image.setEnabled(false);
         btn_delete_image.setEnabled(false);
 
         //Button Click Listener
@@ -184,20 +203,19 @@ public class MainActivity extends AppCompatActivity {
                 results.clear();
                 fileSize = filePathList.size();
                 loadingProgressBar.setMax(fileSize);
-//                loadingLayout.setVisibility(View.VISIBLE);
                 for(int i=0; i < fileSize; i++){
                     imagefile2 = filePathList.get(i);
                     results.add(SiftSurfAlgorithm());
                     if (imagefile2.equals(imagefile)){
                     } else {
-                        if (results.get(i) >= 97) {
+                        if (results.get(i) >= 96.09) {
                             deleteIndex.add(i);
                             btn_delete_image.setEnabled(true);
+                            btn_view_image.setEnabled(true);
                         }
                     }
                 }
                 loadingProgressBar.setVisibility(View.GONE);
-//                loadingLayout.setVisibility(View.INVISIBLE);
 //                System.out.println(filePathList + " & " + deleteIndex);
 
                 //update Result string value
@@ -206,6 +224,43 @@ public class MainActivity extends AppCompatActivity {
 
                 //makes sure match button isn't redundant
                 btn_start_matching.setEnabled(false);
+            }
+        });
+
+        btn_view_image.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                galleryLayout.setVisibility(View.VISIBLE);
+                btn_back.setVisibility(View.VISIBLE);
+
+                btn_choose_image.setVisibility(View.GONE);
+                btn_choose_folder.setVisibility(View.GONE);
+                btn_view_image.setVisibility(View.GONE);
+                btn_delete_image.setVisibility(View.GONE);
+
+                btn_delete_image.setEnabled(true);
+
+                // Retrieve the ArrayList of file paths
+                filePaths = retrieveFilePaths();
+
+                galleryLayout.setLayoutManager(new GridLayoutManager(MainActivity.this, spanCount));
+
+                //Create and set the Image Adapter
+                final ImageAdapter imageAdapter = new ImageAdapter(filePaths, this::onClick);
+                galleryLayout.setAdapter(imageAdapter);
+            }
+        });
+
+        //Back Button for View Gallery
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                galleryLayout.setVisibility(View.GONE);
+                btn_back.setVisibility(View.GONE);
+
+                btn_choose_image.setVisibility(View.VISIBLE);
+                btn_choose_folder.setVisibility(View.VISIBLE);
+                btn_delete_image.setVisibility(View.VISIBLE);
+                btn_view_image.setVisibility(View.VISIBLE);
             }
         });
 
@@ -221,6 +276,13 @@ public class MainActivity extends AppCompatActivity {
                 btn_start_matching.setEnabled(true);
                 filePathList.clear();
                 deleteIndex.clear();
+
+                galleryLayout.setVisibility(View.GONE);
+                btn_delete_image.setVisibility(View.GONE);
+
+                btn_choose_image.setVisibility(View.VISIBLE);
+                btn_choose_folder.setVisibility(View.VISIBLE);
+                btn_view_image.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -230,7 +292,7 @@ public class MainActivity extends AppCompatActivity {
         Mat image2 = Imgcodecs.imread(imagefile2, Imgcodecs.IMREAD_GRAYSCALE);
 //        System.out.println(imagefile + " && " + imagefile2);
         //Initialize ORB Algorithm
-        ORB detector = ORB.create();
+        ORB detector = ORB.create(200);
         //Initialize Image Keypoints
         MatOfKeyPoint keypoints1 = new MatOfKeyPoint();
         MatOfKeyPoint keypoints2 = new MatOfKeyPoint();
@@ -245,11 +307,37 @@ public class MainActivity extends AppCompatActivity {
         //Matching the images
         MatOfDMatch matches = new MatOfDMatch();
         matcher.match(descriptor1, descriptor2, matches);
+
+//        //Print out keypoints results
+//        List<KeyPoint> keypoints1List = keypoints1.toList();
+//        List<KeyPoint> keypoints2List = keypoints2.toList();
+//        for(int i=0; i < keypoints1List.size(); i++){
+//            System.out.println("Image1 Keypoints: " + i + "_" + keypoints1List.get(i));
+//        }
+//        System.out.println("------------------------------------------------------");
+//        for(int i=0; i < keypoints1List.size(); i++){
+//            System.out.println("Image2 Keypoints: " + i + "_" + keypoints2List.get(i));
+//        }
+//        System.out.println("------------------------------------------------------");
+//        //Print out descriptors results
+//        for(int i=0; i < descriptor1.rows(); i++){
+//            for(int j=0; j < descriptor1.cols(); j++){
+//                System.out.print("Image1 Descriptors: " + i + Arrays.toString(descriptor1.get(i,j)));
+//            }
+//        }
+//        System.out.println("------------------------------------------------------");
+//        for(int i=0; i < descriptor2.rows(); i++){
+//            for(int j=0; j < descriptor2.cols(); j++){
+//                System.out.print("Image2 Descriptors: " + i + Arrays.toString(descriptor2.get(i,j)));
+//            }
+//        }
+//        System.out.println("------------------------------------------------------");
+//        //Print out match results
 //        List<DMatch> listofMatches = matches.toList();
-//        //Print the List of Matches
 //        for(int i=0; i<listofMatches.size();i++){
 //            System.out.println("List of Matches: " + i + listofMatches.get(i));
 //        }
+
         //Compute Results
         double compute_keypoint1 = keypoints1.rows();
         double compute_keypoint2 = keypoints2.rows();
@@ -258,15 +346,15 @@ public class MainActivity extends AppCompatActivity {
         double results = (compute_matches / total_keypoints) * 100;
         //Print Results
 //        System.out.println(results);
-//        System.out.println(descriptor1);
 
         return results;
     }
 
     //Delete Image
     public void deleteImage() {
-        for(int i=0; i < deleteIndex.size(); i++){
-            imagefile2 = filePathList.get(deleteIndex.get(i));
+
+        for(int i=0; i < filePathList.size(); i++){
+            imagefile2 = filePathList.get(i);
             String file_dj_path = imagefile2;
             File fdelete = new File(file_dj_path);
             if (fdelete.exists()) {
@@ -280,6 +368,16 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("-->", "File does not exist.");
             }
         }
+    }
+
+    public ArrayList<String> retrieveFilePaths(){
+        ArrayList<String> filePaths = new ArrayList<>();
+
+        for(int i=0; i < deleteIndex.size(); i++){
+            filePaths.add(filePathList.get(deleteIndex.get(i)));
+        }
+
+        return filePaths;
     }
 
     //Refreshes the Gallery (showing results of file deletion)
@@ -361,6 +459,23 @@ public class MainActivity extends AppCompatActivity {
                         filePath = "/storage/emulated/0/" + substring;
                         filePaths.add(filePath);
                     }
+                    if (file.getName().endsWith(".jpeg")){
+                        String uriString = file.getUri().toString();
+                        imageUri2 = Uri.parse(uriString);
+
+                        String decodedUriString = null;
+                        try {
+                            decodedUriString = URLDecoder.decode(uriString, "UTF-8");
+                        } catch (UnsupportedEncodingException e) {
+                            throw new RuntimeException(e);
+                        }
+                        String filePath = Uri.parse(decodedUriString).getPath();
+                        filePath = filePath.replace("%3A", ":").replace("%2F", "/");
+                        int lastIndex = filePath.lastIndexOf(":");
+                        String substring = filePath.substring(lastIndex + 1);
+                        filePath = "/storage/emulated/0/" + substring;
+                        filePaths.add(filePath);
+                    }
                 }
 
                 //Store all the file path in an array
@@ -397,5 +512,9 @@ public class MainActivity extends AppCompatActivity {
                 // Permissions denied
             }
         }
+    }
+
+    public void selectedFiles(List<String> selectedImages) {
+        filePathList = (ArrayList<String>) selectedImages;
     }
 }

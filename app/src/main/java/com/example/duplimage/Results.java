@@ -6,6 +6,7 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -23,8 +24,7 @@ public class Results extends AppCompatActivity {
         getWindow().setLayout((int)(width*.8),(int)(height*.35));
 
 
-        TextView MatchResult;
-        MatchResult = findViewById(R.id.matchResult);
+        TextView MatchResult = findViewById(R.id.matchResult);
 
         MatchResult.setText(MainActivity.resultsText + " similar/duplicate images detected" );
     }

@@ -61,11 +61,11 @@
             app:layout_constraintVertical_bias="0.7" />
 
         <Button
-            android:id="@+id/btn_delete_image"
-            android:layout_width="294dp"
+            android:id="@+id/btn_view_images"
+            android:layout_width="299dp"
             android:layout_height="46dp"
             android:background="@drawable/round_button"
-            android:text="Delete Images"
+            android:text="View Images"
             android:textAlignment="center"
             android:gravity="center"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -74,6 +74,22 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.8" />
+
+        <Button
+            android:id="@+id/btn_delete_image"
+            android:layout_width="294dp"
+            android:layout_height="46dp"
+            android:background="@drawable/round_button"
+            android:text="Delete Images"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.9"/>
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/imageView"
@@ -115,8 +131,16 @@
                 android:layout_centerInParent="true"
                 android:progressDrawable="@drawable/custom_progress_bg"
                 android:visibility="gone"/>
-
         </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/galleryLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white"
+            android:layout_marginBottom="50dp"
+            android:visibility="gone">
+        </androidx.recyclerview.widget.RecyclerView>
 
 <!--        <com.google.android.material.imageview.ShapeableImageView-->
 <!--            android:id="@+id/imageView2"-->
@@ -132,6 +156,18 @@
 <!--            app:srcCompat="@drawable/duplilogo" />-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageButton
+        android:id="@+id/btn_back"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:src="@drawable/back_tick"
+        android:background="@drawable/round_button"
+        android:visibility="gone"/>
 
 
 
