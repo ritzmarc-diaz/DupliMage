@@ -1,92 +1,194 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/duplibg"
-    tools:context=".MainActivity">
+    android:background="@drawable/dmbg_new"
+    android:id="@+id/main_coordinator"
+    tools:context=".MainActivity"
+    >
 
-    <androidx.recyclerview.widget.RecyclerView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/recyclerview"/>
+        android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/btn_choose_image"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignBottom="@+id/imageView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="-20dp"
-        android:text="+"
-        android:textAlignment="center" />
+        <Button
+            android:id="@+id/btn_choose_image"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignBottom="@+id/imageView"
+            android:layout_centerHorizontal="true"
+            android:text="+"
+            android:textAlignment="center"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias=".47"/>
 
-    <Button
-        android:id="@+id/btn_choose_folder"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_alignBottom="@+id/imageView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="-100dp"
-        android:text="Choose Folder"
-        android:textAlignment="center" />
+        <Button
+            android:id="@+id/btn_choose_folder"
+            android:layout_width="299dp"
+            android:layout_height="46dp"
+            android:background="@drawable/round_button"
+            android:text="Choose Folder"
+            android:textAlignment="center"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.6" />
 
-    <Button
-        android:id="@+id/btn_match_images"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/btn_choose_folder"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="-50dp"
-        android:text="Match Images"
-        android:textAlignment="center" />
+        <Button
+            android:id="@+id/btn_match_images"
+            android:layout_width="299dp"
+            android:layout_height="46dp"
+            android:background="@drawable/round_button"
+            android:text="Match Images"
+            android:textAlignment="center"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.7" />
 
-    <Button
-        android:id="@+id/btn_delete_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/btn_match_images"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="-50dp"
-        android:text="Delete Image"
-        android:textAlignment="center" />
+        <Button
+            android:id="@+id/btn_view_images"
+            android:layout_width="299dp"
+            android:layout_height="46dp"
+            android:background="@drawable/round_button"
+            android:text="View Images"
+            android:textAlignment="center"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.8" />
 
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/imageView"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp"
-        android:gravity="center"
-        app:shapeAppearanceOverlay="@style/circleImageViewStyle"
-        app:srcCompat="@drawable/duplilogo" />
+        <Button
+            android:id="@+id/btn_delete_image"
+            android:layout_width="294dp"
+            android:layout_height="46dp"
+            android:background="@drawable/round_button"
+            android:text="Delete Images"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.9"/>
 
-<!--    <com.google.android.material.imageview.ShapeableImageView-->
-<!--        android:id="@+id/imageView2"-->
-<!--        android:layout_width="150dp"-->
-<!--        android:layout_height="150dp"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.850"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintVertical_bias="0.39"-->
-<!--        app:shapeAppearanceOverlay="@style/circleImageViewStyle"-->
-<!--        app:srcCompat="@drawable/duplilogo" />-->
+        <Button
+            android:id="@+id/btn_select_all"
+            android:layout_width="wrap_content"
+            android:layout_height="46dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:text="Select All"
+            android:background="@drawable/round_button"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.95"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0"/>
 
-<!--    <TextView-->
-<!--        android:id="@+id/matchResult"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginBottom="295dp"-->
-<!--        android:text="Match Result: "-->
-<!--        android:textColor="#FFFFFF"-->
-<!--        android:visibility="visible"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="@id/btn_match_images"-->
-<!--        app:layout_constraintHorizontal_bias="0.498"-->
-<!--        app:layout_constraintStart_toStartOf="@id/btn_match_images" />-->
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/imageView"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="100dp"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.2"
+            app:shapeAppearanceOverlay="@style/circleImageViewStyle"
+            app:srcCompat="@drawable/duplilogo" />
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/loadingLayout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1"
+            android:background="@android:color/transparent"
+            android:padding="16dp">
+
+            <ProgressBar
+                android:id="@+id/loadingProgressBar"
+                android:animationResolution="300"
+                android:indeterminate="true"
+                android:indeterminateBehavior="cycle"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:progressDrawable="@drawable/custom_progress_bg"
+                android:visibility="gone"/>
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/galleryLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white"
+            android:layout_marginBottom="50dp"
+            android:visibility="gone">
+        </androidx.recyclerview.widget.RecyclerView>
+
+<!--        <com.google.android.material.imageview.ShapeableImageView-->
+<!--            android:id="@+id/imageView2"-->
+<!--            android:layout_width="150dp"-->
+<!--            android:layout_height="150dp"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintHorizontal_bias="0.850"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:layout_constraintVertical_bias="0.39"-->
+<!--            app:shapeAppearanceOverlay="@style/circleImageViewStyle"-->
+<!--            app:srcCompat="@drawable/duplilogo" />-->
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageButton
+        android:id="@+id/btn_back"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:src="@drawable/back_tick"
+        android:background="@drawable/round_button"
+        android:visibility="gone"/>
 
 
-</RelativeLayout>
+
+
+
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
